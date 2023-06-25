@@ -1,0 +1,15 @@
+{
+  "name": "jira-clone",
+  "version": "1.0.0",
+  "description": "* authentication\r * task / issue management ----> create, assign and delete\r * project management ----> status notifications admin roles...",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "client": "npm start --prefix client",
+    "server": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
