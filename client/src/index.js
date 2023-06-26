@@ -2,16 +2,22 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import {
   createBrowserRouter,
+  Navigate,
   RouterProvider,
   useRouteError,
 } from "react-router-dom";
 import { Container, Typography } from "@mui/material";
+import Login from "./Components/Login";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <h2>This is /</h2>,
+    element: <Navigate to={"/login"} />,
     errorElement: <ErrorBoundry />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
   },
 ]);
 
@@ -20,11 +26,8 @@ function ErrorBoundry() {
   console.error(error);
   return (
     <Container
+      className="d-flex flex-column align-items-center justify-content-center"
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
         minHeight: "100vh",
       }}
     >
@@ -42,6 +45,10 @@ function ErrorBoundry() {
 }
 
 const root = document.getElementById("root");
+root.style.minHeight = window.innerHeight + "px";
+window.onresize = () => {
+  root.style.minHeight = window.innerHeight + "px";
+};
 
 ReactDOM.createRoot(root).render(
   <React.StrictMode>
