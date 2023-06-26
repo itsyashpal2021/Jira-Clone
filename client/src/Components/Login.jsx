@@ -19,6 +19,8 @@ import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script";
 import React, { useEffect, useState } from "react";
 
+import { postToNodeServer } from "../utils";
+
 export default function Login() {
   const clientId =
     "170407840822-ptrb3fhk38v1h2srijp30a8mga17lku3.apps.googleusercontent.com";
@@ -34,10 +36,15 @@ export default function Login() {
     gapi.load("client:auth2", start);
   });
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const formValues = Object.fromEntries(new FormData(e.target));
-    window.alert(JSON.stringify(formValues));
+    const res = await postToNodeServer("/user/login", formValues);
+    if (res.data.error) {
+      console.error(res.data.error);
+      return;
+    }
+    localStorage.setItem('token', res.data.token);
   };
 
   const onGoogleLoginSuccess = (res) => {

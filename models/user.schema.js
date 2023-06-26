@@ -2,12 +2,9 @@ const mongoose = require("../utils/mongoDB");
 
 const userSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  firstName: {
+  username: {
     type: String,
     required: true,
-  },
-  lastName: {
-    type: String,
   },
   email: {
     type: String,

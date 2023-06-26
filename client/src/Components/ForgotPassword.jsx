@@ -16,6 +16,8 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import * as colors from "@mui/material/colors";
 import React, { useRef, useState } from "react";
 
+import { postToNodeServer } from "../utils";
+
 export default function ForgotPassword() {
   const [otp, setOtp] = useState(undefined);
   const [otpMatched, setOtpMatched] = useState(false);
@@ -57,7 +59,7 @@ export default function ForgotPassword() {
     return inputRefs.current.map((input) => input.value).join("");
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setFormError("");
     if (!otp) {
@@ -73,7 +75,14 @@ export default function ForgotPassword() {
       const confirmPassword = document.getElementById("confirmPassword").value;
       if (password !== confirmPassword) setFormError("Passwords do not match.");
       else {
-        alert(`new password is ${password}`);
+        const respose = await postToNodeServer("/user/change-password", {
+          email,
+          password,
+        });
+        if (respose.status === 200) {
+          // Redirect to login page
+        }
+
       }
     }
   };
