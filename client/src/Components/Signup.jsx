@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   FormControl,
   InputLabel,
@@ -8,14 +9,16 @@ import {
   Button,
   Typography,
   TextField,
-  Stack,
   Link,
 } from "@mui/material";
 import * as colors from "@mui/material/colors";
-import { VisibilityOff, Visibility } from "@mui/icons-material";
-import React, { useState } from "react";
+import {
+  VisibilityOff,
+  Visibility,
+  ArrowBackRounded,
+} from "@mui/icons-material";
 
-export default function Login() {
+export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = (e) => {
@@ -45,9 +48,19 @@ export default function Login() {
           variant="h4"
           className="text-decoration-underline text-center mb-4"
         >
-          Sign In
+          Sign Up
         </Typography>
         <form className="d-flex flex-column" onSubmit={onSubmit}>
+          <TextField
+            label="Email"
+            id="email"
+            name="email"
+            type="email"
+            margin="dense"
+            inputProps={{ className: "fw-bold bg-light" }}
+            autoFocus
+            required
+          />
           <TextField
             label="Username"
             id="username"
@@ -76,33 +89,43 @@ export default function Login() {
               required
             />
           </FormControl>
+          <FormControl variant="outlined" margin="normal" required>
+            <InputLabel htmlFor="password">Confirm Password</InputLabel>
+            <OutlinedInput
+              type={showPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Confirm Password"
+              id="confirmPassword"
+              name="confirmPassword"
+              className="fw-bold bg-light"
+              required
+            />
+          </FormControl>
           <Button
             variant="contained"
             type="submit"
             size="large"
             className="mt-2"
-          >
-            Login
-          </Button>
-        </form>
-        <Stack direction="row" justifyContent="space-between" my={2}>
-          <Link
-            href="/forgotPassword"
-            underline="hover"
-            variant="body1"
-            color={colors.red[700]}
-          >
-            Forgot Password?
-          </Link>
-          <Link
-            href="/signup"
-            underline="hover"
-            variant="body1"
-            color={colors.indigo.A700}
+            color="secondary"
           >
             Sign Up
-          </Link>
-        </Stack>
+          </Button>
+        </form>
+        <Link
+          href="/login"
+          underline="hover"
+          variant="body1"
+          className="d-block text-end mt-2"
+        >
+          <ArrowBackRounded fontSize="small" />
+          Login with existing account.
+        </Link>
       </Grid>
     </Grid>
   );
