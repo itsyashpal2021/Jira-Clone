@@ -10,6 +10,7 @@ import {
   Typography,
   TextField,
   Link,
+  FormHelperText,
 } from "@mui/material";
 import * as colors from "@mui/material/colors";
 import {
@@ -20,10 +21,22 @@ import {
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    window.alert("form submitted");
+    const formValues = Object.fromEntries(new FormData(e.target));
+    if (formValues.password !== formValues.confirmPassword) {
+      setPasswordError(true);
+      setFormError("Passwords do not match");
+      return;
+    }
+    if (passwordError) setPasswordError(false);
+    setFormError("");
+
+    delete formValues.confirmPassword;
+    window.alert(JSON.stringify(formValues));
   };
 
   return (
@@ -50,6 +63,7 @@ export default function Signup() {
         >
           Sign Up
         </Typography>
+
         <form className="d-flex flex-column" onSubmit={onSubmit}>
           <TextField
             label="Email"
@@ -68,7 +82,6 @@ export default function Signup() {
             type="text"
             margin="dense"
             inputProps={{ className: "fw-bold bg-light" }}
-            autoFocus
             required
           />
           <FormControl variant="outlined" margin="normal" required>
@@ -104,8 +117,12 @@ export default function Signup() {
               id="confirmPassword"
               name="confirmPassword"
               className="fw-bold bg-light"
+              error={passwordError}
               required
             />
+            <FormHelperText error className="fw-bold">
+              {formError}
+            </FormHelperText>
           </FormControl>
           <Button
             variant="contained"

@@ -10,17 +10,42 @@ import {
   TextField,
   Stack,
   Link,
+  Divider,
 } from "@mui/material";
 import * as colors from "@mui/material/colors";
-import { VisibilityOff, Visibility } from "@mui/icons-material";
-import React, { useState } from "react";
+import { VisibilityOff, Visibility, Google } from "@mui/icons-material";
+
+import { GoogleLogin } from "react-google-login";
+import { gapi } from "gapi-script";
+import React, { useEffect, useState } from "react";
 
 export default function Login() {
+  const clientId =
+    "170407840822-ptrb3fhk38v1h2srijp30a8mga17lku3.apps.googleusercontent.com";
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: clientId,
+        scope: "",
+      });
+    }
+    gapi.load("client:auth2", start);
+  });
 
   const onSubmit = (e) => {
     e.preventDefault();
-    window.alert("form submitted");
+    const formValues = Object.fromEntries(new FormData(e.target));
+    window.alert(JSON.stringify(formValues));
+  };
+
+  const onGoogleLoginSuccess = (res) => {
+    console.log(res.profileObj);
+  };
+
+  const onGoogleLoginFailure = (res) => {
+    console.error(res);
   };
 
   return (
@@ -41,18 +66,42 @@ export default function Login() {
         className="rounded ms-3"
         bgcolor={colors.blue[50]}
       >
+        <GoogleLogin
+          isSignedIn={true}
+          cookiePolicy="single_host_origin"
+          clientId={clientId}
+          onSuccess={onGoogleLoginSuccess}
+          onFailure={onGoogleLoginFailure}
+          render={(renderProps) => (
+            <Button
+              variant="contained"
+              onClick={renderProps.onClick}
+              disabled={renderProps.disabled}
+              size="large"
+              className="w-100 mb-3"
+              color="success"
+            >
+              <Google className="me-2" />
+              Sign in with Google
+            </Button>
+          )}
+        />
+
+        <Divider className="fw-medium">OR</Divider>
+
         <Typography
-          variant="h4"
-          className="text-decoration-underline text-center mb-4"
+          variant="body1"
+          className="text-decoration-underline text-center my-3 fw-bold"
         >
-          Sign In
+          Sign In with Email
         </Typography>
+
         <form className="d-flex flex-column" onSubmit={onSubmit}>
           <TextField
-            label="Username"
-            id="username"
-            name="username"
-            type="text"
+            label="Email"
+            id="email"
+            name="email"
+            type="email"
             margin="dense"
             inputProps={{ className: "fw-bold bg-light" }}
             autoFocus
