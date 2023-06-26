@@ -1,15 +1,19 @@
 {
-  "name": "jira-clone",
-  "version": "1.0.0",
-  "description": "* authentication\r * task / issue management ----> create, assign and delete\r * project management ----> status notifications admin roles...",
-  "main": "server.js",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.3.1",
+    "nodemon": "^2.0.22",
+    "yup": "^1.2.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
+    "start": "node index.js",
     "client": "npm start --prefix client",
-    "server": "nodemon server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+    "server": "nodemon index.js"
+  }
 }
