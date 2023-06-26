@@ -5,8 +5,7 @@ const cors = require("cors");
 
 require("dotenv").config();
 
-const userRoute = require("./routes/User.route");
-
+const userRoute = require("./routes/user.route");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -42,4 +41,3 @@ app.use((error, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-

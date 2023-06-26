@@ -11,7 +11,7 @@ mongoose.connect(mongo_defaultDB_conn_string, {
 // CONNECTION EVENTS
 // When successfully connected
 mongoose.connection.on("connected", function () {
-  console.log("MongoDB is connected...");
+  console.log("MongoDB is connected to", mongoose.connection._connectionString);
 });
 
 // If the connection throws an error

@@ -20,7 +20,7 @@ module.exports.Signup = async (req, res) => {
       lastName: yup.string(),
     });
 
-    // validate req body with sceham
+    // validate req body with schema
     let validation = await schemaValidator(req.body, schema);
     if (!validation.status) {
       return errorResponse(res, validation.error, 400);

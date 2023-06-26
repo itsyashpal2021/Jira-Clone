@@ -18,13 +18,14 @@ import {
   Visibility,
   ArrowBackRounded,
 } from "@mui/icons-material";
+import { postToNodeServer } from "../utils";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [formError, setFormError] = useState("");
   const [passwordError, setPasswordError] = useState(false);
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const formValues = Object.fromEntries(new FormData(e.target));
     if (formValues.password !== formValues.confirmPassword) {
@@ -36,7 +37,7 @@ export default function Signup() {
     setFormError("");
 
     delete formValues.confirmPassword;
-    window.alert(JSON.stringify(formValues));
+    await postToNodeServer("/user/signup", formValues);
   };
 
   return (
