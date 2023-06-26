@@ -9,6 +9,7 @@ import {
 import { Container, Typography } from "@mui/material";
 import Login from "./Components/Login";
 import Signup from "./Components/Signup";
+import ForgotPassword from "./Components/ForgotPassword";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />,
+  },
+  {
+    path: "/forgotPassword",
+    element: <ForgotPassword />,
   },
 ]);
 

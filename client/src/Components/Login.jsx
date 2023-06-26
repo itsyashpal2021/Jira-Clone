@@ -66,6 +66,16 @@ export default function Login() {
         className="rounded ms-3"
         bgcolor={colors.blue[50]}
       >
+        <img
+          src={require("../Images/login.jpg")}
+          alt="login"
+          style={{
+            mixBlendMode: "multiply",
+            maxHeight: "300px",
+          }}
+          className="mx-auto d-block"
+        />
+
         <GoogleLogin
           isSignedIn={true}
           cookiePolicy="single_host_origin"
@@ -140,6 +150,7 @@ export default function Login() {
             underline="hover"
             variant="body1"
             color={colors.red[700]}
+            className="fw-medium"
           >
             Forgot Password?
           </Link>
@@ -148,6 +159,7 @@ export default function Login() {
             underline="hover"
             variant="body1"
             color={colors.indigo.A700}
+            className="fw-medium"
           >
             Sign Up
           </Link>

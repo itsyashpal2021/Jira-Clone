@@ -54,9 +54,18 @@ export default function Signup() {
         xs={11}
         p={2}
         border="2px solid black"
-        className="rounded ms-3"
+        className="rounded ms-3 mt-3"
         bgcolor={colors.blue[50]}
       >
+        <img
+          src={require("../Images/signup.jpg")}
+          alt="login"
+          style={{
+            mixBlendMode: "multiply",
+            maxHeight: "300px",
+          }}
+          className="mx-auto d-block"
+        />
         <Typography
           variant="h4"
           className="text-decoration-underline text-center mb-4"
@@ -133,16 +142,16 @@ export default function Signup() {
           >
             Sign Up
           </Button>
+          <Link
+            href="/login"
+            underline="hover"
+            variant="body1"
+            className="ms-auto mt-2 fw-bold"
+          >
+            <ArrowBackRounded fontSize="small" />
+            Login with existing account.
+          </Link>
         </form>
-        <Link
-          href="/login"
-          underline="hover"
-          variant="body1"
-          className="d-block text-end mt-2"
-        >
-          <ArrowBackRounded fontSize="small" />
-          Login with existing account.
-        </Link>
       </Grid>
     </Grid>
   );
