@@ -11,6 +11,7 @@ import {
   Stack,
   Link,
   Divider,
+  FormHelperText,
 } from "@mui/material";
 import * as colors from "@mui/material/colors";
 import { VisibilityOff, Visibility, Google } from "@mui/icons-material";
@@ -18,6 +19,7 @@ import { VisibilityOff, Visibility, Google } from "@mui/icons-material";
 import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { postToNodeServer } from "../utils";
 
@@ -25,6 +27,8 @@ export default function Login() {
   const clientId =
     "170407840822-ptrb3fhk38v1h2srijp30a8mga17lku3.apps.googleusercontent.com";
   const [showPassword, setShowPassword] = useState(false);
+  const [formError, setFormError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     function start() {
@@ -40,11 +44,16 @@ export default function Login() {
     e.preventDefault();
     const formValues = Object.fromEntries(new FormData(e.target));
     const res = await postToNodeServer("/user/login", formValues);
-    if (res.data.error) {
-      console.error(res.data.error);
+    if (res.error) {
+      setFormError(
+        res.error.statusCode !== 500
+          ? res.error.message
+          : "something went wrong"
+      );
       return;
     }
-    localStorage.setItem('token', res.data.token);
+    localStorage.setItem("token", res.token);
+    navigate("/home");
   };
 
   const onGoogleLoginSuccess = (res) => {
@@ -142,6 +151,9 @@ export default function Login() {
               required
             />
           </FormControl>
+          <FormHelperText error className="fw-bold">
+            {formError}
+          </FormHelperText>
           <Button
             variant="contained"
             type="submit"

@@ -29,11 +29,15 @@ const router = createBrowserRouter([
     path: "/forgotPassword",
     element: <ForgotPassword />,
   },
+  {
+    path: "/home",
+    element: <h2 className="text-warning">Welcome Home</h2>,
+  },
 ]);
 
 function ErrorBoundry() {
   let error = useRouteError();
-  console.error(error);
+  console.error(error.data);
   return (
     <Container
       className="d-flex flex-column align-items-center justify-content-center"

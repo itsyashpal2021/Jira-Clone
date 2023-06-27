@@ -27,9 +27,18 @@ module.exports.Signup = async (req, res) => {
 
     const { email, password, username } = req.body;
 
-    const existingUser = await UserSchema.findOne({ email });
+    const existingEmail = await UserSchema.findOne({ email });
+    if (existingEmail) {
+      return errorResponse(
+        res,
+        "An User with given email is already registered.",
+        400
+      );
+    }
+
+    const existingUser = await UserSchema.findOne({ username });
     if (existingUser) {
-      return errorResponse(res, "User already exists.", 400);
+      return errorResponse(res, "Username not available.", 400);
     }
 
     const hashedPassword = await bcrypt.hash(password, Number(saltRounds));

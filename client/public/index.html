@@ -38,6 +38,17 @@
         -webkit-appearance: none;
         margin: 0;
       }
+
+      /* override default form autofill styling */
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      textarea:-webkit-autofill,
+      textarea:-webkit-autofill:hover,
+      textarea:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0 30px #f2efc5a3 inset !important;
+        background-color: #f2efc5a3 !important;
+      }
     </style>
     <title>JIRA</title>
   </head>

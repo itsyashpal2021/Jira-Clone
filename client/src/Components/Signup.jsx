@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FormControl,
   InputLabel,
@@ -25,6 +26,8 @@ export default function Signup() {
   const [formError, setFormError] = useState("");
   const [passwordError, setPasswordError] = useState(false);
 
+  const navigate = useNavigate();
+
   const onSubmit = async (e) => {
     e.preventDefault();
     const formValues = Object.fromEntries(new FormData(e.target));
@@ -37,7 +40,16 @@ export default function Signup() {
     setFormError("");
 
     delete formValues.confirmPassword;
-    await postToNodeServer("/user/signup", formValues);
+    const res = await postToNodeServer("/user/signup", formValues);
+    if (res.error) {
+      setFormError(
+        res.error.statusCode !== 500
+          ? res.error.message
+          : "something went wrong"
+      );
+    } else {
+      navigate("/home");
+    }
   };
 
   return (

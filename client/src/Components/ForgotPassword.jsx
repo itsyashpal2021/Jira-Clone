@@ -15,8 +15,8 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import * as colors from "@mui/material/colors";
 import React, { useRef, useState } from "react";
-
 import { postToNodeServer } from "../utils";
+import { useNavigate } from "react-router-dom";
 
 export default function ForgotPassword() {
   const [otp, setOtp] = useState(undefined);
@@ -25,12 +25,15 @@ export default function ForgotPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [formError, setFormError] = useState("");
 
+  const navigate = useNavigate();
+
   const inputRefs = useRef([]);
 
   const handleChange = (index, input) => {
     var value = input.value;
+
+    // If multiple characters are pasted, extract only the first character
     if (value.length > 1) {
-      // If multiple characters are pasted, extract only the first character
       value = value.charAt(0);
     }
 
@@ -44,45 +47,40 @@ export default function ForgotPassword() {
   };
 
   const handleKeyDown = (index, event) => {
+    // If Backspace is pressed and the current input field is empty, focus on the previous field
     if (event.key === "Backspace" && index > 0 && event.target.value === "") {
-      // If Backspace is pressed and the current input field is empty, focus on the previous field
       inputRefs.current[index - 1].focus();
       return;
     }
+
+    // change input value by latest one
     if (event.key !== "Backspace" && event.target.value.length === 1) {
-      // change input value by latest one
       inputRefs.current[index].value = toString(event.key);
     }
-  };
-
-  const getInputValues = () => {
-    return inputRefs.current.map((input) => input.value).join("");
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setFormError("");
+    const formValues = Object.fromEntries(new FormData(e.target));
+    console.log(formValues);
     if (!otp) {
       const sentOtp = "1234";
-      setEmail(document.getElementById("email").value);
+      setEmail(formValues.email);
       setOtp(sentOtp);
     } else if (!otpMatched) {
-      const otpMatch = getInputValues() === otp;
+      const otpMatch = Object.values(formValues).join("") === otp;
       if (!otpMatch) setFormError("Incorrect OTP");
       setOtpMatched(otpMatch);
     } else {
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirmPassword").value;
+      const { password, confirmPassword } = formValues;
       if (password !== confirmPassword) setFormError("Passwords do not match.");
       else {
-        const respose = await postToNodeServer("/user/change-password", {
+        const res = await postToNodeServer("/user/change-password", {
           email,
           password,
         });
-        if (respose.status === 200) {
-          // Redirect to login page
-        }
-
+        if (!res.error) navigate("/login");
       }
     }
   };
@@ -196,6 +194,7 @@ export default function ForgotPassword() {
                       return (
                         <TextField
                           type="number"
+                          name={"otp" + index}
                           sx={{
                             input: {
                               textAlign: "center",
