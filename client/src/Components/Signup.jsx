@@ -48,6 +48,7 @@ export default function Signup() {
           : "something went wrong"
       );
     } else {
+      localStorage.setItem("token", res.token);
       navigate("/home");
     }
   };
