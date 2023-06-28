@@ -15,7 +15,7 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import * as colors from "@mui/material/colors";
 import React, { useRef, useState } from "react";
-import { postToNodeServer } from "../../utils";
+import { postToNodeServer } from "../utils";
 import { useNavigate } from "react-router-dom";
 
 export default function ForgotPassword() {
@@ -104,7 +104,7 @@ export default function ForgotPassword() {
         bgcolor={colors.blue[50]}
       >
         <img
-          src={require("../../Images/forgotPassword.jpg")}
+          src={require("../Images/forgotPassword.jpg")}
           alt="login"
           style={{
             mixBlendMode: "multiply",
