@@ -14,31 +14,19 @@ import {
   FormHelperText,
 } from "@mui/material";
 import * as colors from "@mui/material/colors";
-import { VisibilityOff, Visibility, Google } from "@mui/icons-material";
+import { VisibilityOff, Visibility } from "@mui/icons-material";
 
-import { GoogleLogin } from "react-google-login";
-import { gapi } from "gapi-script";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { postToNodeServer } from "../utils";
+import { postToNodeServer } from "../../utils";
+import GoogleAuthLogin from "./GoogleAuthLogin";
 
 export default function Login() {
-  const clientId =
-    "170407840822-ptrb3fhk38v1h2srijp30a8mga17lku3.apps.googleusercontent.com";
   const [showPassword, setShowPassword] = useState(false);
   const [formError, setFormError] = useState("");
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    function start() {
-      gapi.client.init({
-        clientId: clientId,
-        scope: "",
-      });
-    }
-    gapi.load("client:auth2", start);
-  });
+  const navigate = useNavigate();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -54,14 +42,6 @@ export default function Login() {
     }
     localStorage.setItem("token", res.token);
     navigate("/home");
-  };
-
-  const onGoogleLoginSuccess = (res) => {
-    console.log(res.profileObj);
-  };
-
-  const onGoogleLoginFailure = (res) => {
-    console.error(res);
   };
 
   return (
@@ -83,7 +63,7 @@ export default function Login() {
         bgcolor={colors.blue[50]}
       >
         <img
-          src={require("../Images/login.jpg")}
+          src={require("../../Images/login.jpg")}
           alt="login"
           style={{
             mixBlendMode: "multiply",
@@ -92,26 +72,8 @@ export default function Login() {
           className="mx-auto d-block"
         />
 
-        <GoogleLogin
-          isSignedIn={true}
-          cookiePolicy="single_host_origin"
-          clientId={clientId}
-          onSuccess={onGoogleLoginSuccess}
-          onFailure={onGoogleLoginFailure}
-          render={(renderProps) => (
-            <Button
-              variant="contained"
-              onClick={renderProps.onClick}
-              disabled={renderProps.disabled}
-              size="large"
-              className="w-100 mb-3"
-              color="success"
-            >
-              <Google className="me-2" />
-              Sign in with Google
-            </Button>
-          )}
-        />
+        {/* Login with google */}
+        <GoogleAuthLogin />
 
         <Divider className="fw-medium">OR</Divider>
 
