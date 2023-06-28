@@ -14,7 +14,7 @@ import { Google } from "@mui/icons-material";
 import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script";
 
-import { postToNodeServer } from "../utils";
+import { postToNodeServer } from "../../utils.js";
 import { useNavigate } from "react-router-dom";
 
 export default function GoogleAuthLogin() {

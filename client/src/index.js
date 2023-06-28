@@ -7,14 +7,15 @@ import {
   useRouteError,
 } from "react-router-dom";
 import { Container, Typography } from "@mui/material";
-import Login from "./Components/Login";
-import Signup from "./Components/Signup";
-import ForgotPassword from "./Components/ForgotPassword";
+import Login from "./Components/Auth/Login";
+import Signup from "./Components/Auth/Signup";
+import ForgotPassword from "./Components/Auth/ForgotPassword";
+import Home from "./Components/Home/Home";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to={"/login"} />,
+    element: <Navigate to={"/home"} />,
     errorElement: <ErrorBoundry />,
   },
   {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/home",
-    element: <h2 className="text-warning">Welcome Home</h2>,
+    element: <Home />,
   },
 ]);
 

@@ -72,7 +72,16 @@ module.exports.setUsername = async (req, res) => {
     });
     await newUser.save();
 
-    res.status(200).json({ message: "success" });
+    // login the user
+    const token = jwt.sign(
+      { email: newUser.email, id: newUser._id },
+      process.env.JWT_TOKEN,
+      { expiresIn: "23h" }
+    );
+
+    return res.status(200).json({
+      token,
+    });
   } catch (err) {
     console.log(err);
     return errorResponse(res, "Something went wrong", 500, { error: err });
@@ -201,5 +210,21 @@ module.exports.ChangePassword = async (req, res) => {
   } catch (err) {
     console.error(err);
     return errorResponse(res, "Something went wrong", 500, { error: err });
+  }
+};
+
+// check session
+module.exports.checkSession = async (req, res) => {
+  try {
+    const { token } = req.body;
+    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
+
+    res.status(200).json({ message: "token valid" });
+  } catch (err) {
+    if (err instanceof jwt.TokenExpiredError)
+      return errorResponse(res, "token expired", 400);
+
+    console.log(err);
+    return errorResponse(res, "Something went wrong", 500);
   }
 };

@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   FormControl,
   InputLabel,
@@ -10,47 +8,40 @@ import {
   Button,
   Typography,
   TextField,
+  Stack,
   Link,
+  Divider,
   FormHelperText,
 } from "@mui/material";
 import * as colors from "@mui/material/colors";
-import {
-  VisibilityOff,
-  Visibility,
-  ArrowBackRounded,
-} from "@mui/icons-material";
-import { postToNodeServer } from "../utils";
+import { VisibilityOff, Visibility } from "@mui/icons-material";
 
-export default function Signup() {
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { postToNodeServer } from "../../utils";
+import GoogleAuthLogin from "./GoogleAuthLogin";
+
+export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [formError, setFormError] = useState("");
-  const [passwordError, setPasswordError] = useState(false);
 
   const navigate = useNavigate();
 
   const onSubmit = async (e) => {
     e.preventDefault();
     const formValues = Object.fromEntries(new FormData(e.target));
-    if (formValues.password !== formValues.confirmPassword) {
-      setPasswordError(true);
-      setFormError("Passwords do not match");
-      return;
-    }
-    if (passwordError) setPasswordError(false);
-    setFormError("");
-
-    delete formValues.confirmPassword;
-    const res = await postToNodeServer("/user/signup", formValues);
+    const res = await postToNodeServer("/user/login", formValues);
     if (res.error) {
       setFormError(
         res.error.statusCode !== 500
           ? res.error.message
           : "something went wrong"
       );
-    } else {
-      localStorage.setItem("token", res.token);
-      navigate("/home");
+      return;
     }
+    localStorage.setItem("token", res.token);
+    navigate("/home");
   };
 
   return (
@@ -68,11 +59,11 @@ export default function Signup() {
         xs={11}
         p={2}
         border="2px solid black"
-        className="rounded ms-3 mt-3"
+        className="rounded ms-3"
         bgcolor={colors.blue[50]}
       >
         <img
-          src={require("../Images/signup.jpg")}
+          src={require("../../Images/login.jpg")}
           alt="login"
           style={{
             mixBlendMode: "multiply",
@@ -80,11 +71,17 @@ export default function Signup() {
           }}
           className="mx-auto d-block"
         />
+
+        {/* Login with google */}
+        <GoogleAuthLogin />
+
+        <Divider className="fw-medium">OR</Divider>
+
         <Typography
-          variant="h4"
-          className="text-decoration-underline text-center mb-4"
+          variant="body1"
+          className="text-decoration-underline text-center my-3 fw-bold"
         >
-          Sign Up
+          Sign In with Email
         </Typography>
 
         <form className="d-flex flex-column" onSubmit={onSubmit}>
@@ -96,15 +93,6 @@ export default function Signup() {
             margin="dense"
             inputProps={{ className: "fw-bold bg-light" }}
             autoFocus
-            required
-          />
-          <TextField
-            label="Username"
-            id="username"
-            name="username"
-            type="text"
-            margin="dense"
-            inputProps={{ className: "fw-bold bg-light" }}
             required
           />
           <FormControl variant="outlined" margin="normal" required>
@@ -125,47 +113,38 @@ export default function Signup() {
               required
             />
           </FormControl>
-          <FormControl variant="outlined" margin="normal" required>
-            <InputLabel htmlFor="password">Confirm Password</InputLabel>
-            <OutlinedInput
-              type={showPassword ? "text" : "password"}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword(!showPassword)}>
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Confirm Password"
-              id="confirmPassword"
-              name="confirmPassword"
-              className="fw-bold bg-light"
-              error={passwordError}
-              required
-            />
-            <FormHelperText error className="fw-bold">
-              {formError}
-            </FormHelperText>
-          </FormControl>
+          <FormHelperText error className="fw-bold">
+            {formError}
+          </FormHelperText>
           <Button
             variant="contained"
             type="submit"
             size="large"
             className="mt-2"
-            color="secondary"
           >
-            Sign Up
+            Login
           </Button>
+        </form>
+        <Stack direction="row" justifyContent="space-between" my={2}>
           <Link
-            href="/login"
+            href="/forgotPassword"
             underline="hover"
             variant="body1"
-            className="ms-auto mt-2 fw-bold"
+            color={colors.red[700]}
+            className="fw-medium"
           >
-            <ArrowBackRounded fontSize="small" />
-            Login with existing account.
+            Forgot Password?
           </Link>
-        </form>
+          <Link
+            href="/signup"
+            underline="hover"
+            variant="body1"
+            color={colors.indigo.A700}
+            className="fw-medium"
+          >
+            Sign Up
+          </Link>
+        </Stack>
       </Grid>
     </Grid>
   );
