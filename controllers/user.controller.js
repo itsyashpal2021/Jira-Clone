@@ -10,6 +10,84 @@ const { errorResponse } = require("../utils/errorHandler");
 
 const saltRounds = 10;
 
+module.exports.signInWithGoogle = async (req, res) => {
+  try {
+    // Check Req Body has all the required fields
+    const schema = yup.object().shape({
+      email: yup.string().email().required("Email is required"),
+    });
+
+    // validate req body with schema
+    let validation = await schemaValidator(req.body, schema);
+    if (!validation.status) {
+      return errorResponse(res, validation.error, 400);
+    }
+
+    const { email } = req.body;
+    const user_doc = await UserSchema.findOne({ email });
+
+    // check if it is a new user. if yes prompt for username
+    if (!user_doc) return errorResponse(res, "New User, no username", 400);
+
+    // login the user
+    const token = jwt.sign(
+      { email: user_doc.email, id: user_doc._id },
+      process.env.JWT_TOKEN,
+      { expiresIn: "23h" }
+    );
+
+    return res.status(200).json({
+      token,
+    });
+  } catch (err) {
+    console.log(err);
+    return errorResponse(res, "Something went wrong", 500, { error: err });
+  }
+};
+
+module.exports.setUsername = async (req, res) => {
+  try {
+    // Check Req Body has all the required fields
+    const schema = yup.object().shape({
+      email: yup.string().email().required("email is requires"),
+      username: yup.string().required("username is required"),
+    });
+
+    // validate req body with schema
+    let validation = await schemaValidator(req.body, schema);
+    if (!validation.status) {
+      return errorResponse(res, validation.error, 400);
+    }
+
+    const { email, username } = req.body;
+    const user_doc = await UserSchema.findOne({ username });
+
+    // check if username is available
+    if (user_doc) return errorResponse(res, "username is not available", 400);
+    const newUser = new UserSchema({
+      _id: new mongoose.Types.ObjectId(),
+      email: email,
+      username: username,
+      googleAuth: true,
+    });
+    await newUser.save();
+
+    // login the user
+    const token = jwt.sign(
+      { email: newUser.email, id: newUser._id },
+      process.env.JWT_TOKEN,
+      { expiresIn: "23h" }
+    );
+
+    return res.status(200).json({
+      token,
+    });
+  } catch (err) {
+    console.log(err);
+    return errorResponse(res, "Something went wrong", 500, { error: err });
+  }
+};
+
 module.exports.Signup = async (req, res) => {
   try {
     // Check Req Body has all the required fields
@@ -51,9 +129,15 @@ module.exports.Signup = async (req, res) => {
 
     await user.save();
 
-    return res
-      .status(200)
-      .json({ message: "Successfully SignUp ! Now you can login" });
+    const token = jwt.sign(
+      { email: user.email, id: user._id },
+      process.env.JWT_TOKEN,
+      { expiresIn: "23h" }
+    );
+
+    return res.status(200).json({
+      token,
+    });
   } catch (err) {
     console.log(err);
     return errorResponse(res, "Something went wrong", 500, { error: err });
@@ -80,6 +164,9 @@ module.exports.Login = async (req, res) => {
     if (!user_doc) {
       return errorResponse(res, "This email is not registered", 404);
     }
+    if (user_doc.googleAuth)
+      return errorResponse(res, "Something went wrong", 500);
+
     const isPasswordCorrect = await bcrypt.compare(password, user_doc.password);
     if (!isPasswordCorrect) {
       return errorResponse(res, "Invalid credentials", 400);
@@ -92,10 +179,6 @@ module.exports.Login = async (req, res) => {
     );
 
     return res.status(200).json({
-      id: user_doc["_id"],
-      username: user_doc["username"],
-      email: user_doc["email"],
-      nameinitials: user_doc["nameinitials"],
       token,
     });
   } catch (err) {
@@ -127,5 +210,21 @@ module.exports.ChangePassword = async (req, res) => {
   } catch (err) {
     console.error(err);
     return errorResponse(res, "Something went wrong", 500, { error: err });
+  }
+};
+
+// check session
+module.exports.checkSession = async (req, res) => {
+  try {
+    const { token } = req.body;
+    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
+
+    res.status(200).json({ message: "token valid" });
+  } catch (err) {
+    if (err instanceof jwt.TokenExpiredError)
+      return errorResponse(res, "token expired", 400);
+
+    console.log(err);
+    return errorResponse(res, "Something went wrong", 500);
   }
 };
