@@ -19,7 +19,7 @@ import {
   Visibility,
   ArrowBackRounded,
 } from "@mui/icons-material";
-import { postToNodeServer } from "../../utils";
+import { postToNodeServer } from "../utils";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -48,7 +48,6 @@ export default function Signup() {
           : "something went wrong"
       );
     } else {
-      localStorage.setItem("token", res.token);
       navigate("/home");
     }
   };
@@ -72,7 +71,7 @@ export default function Signup() {
         bgcolor={colors.blue[50]}
       >
         <img
-          src={require("../../Images/signup.jpg")}
+          src={require("../Images/signup.jpg")}
           alt="login"
           style={{
             mixBlendMode: "multiply",
