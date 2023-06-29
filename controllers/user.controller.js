@@ -218,8 +218,14 @@ module.exports.checkSession = async (req, res) => {
   try {
     const { token } = req.body;
     const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
+    const user = await UserSchema.findOne({ email: decodedToken.email });
 
-    res.status(200).json({ message: "token valid" });
+    res.status(200).json({
+      userDetails: {
+        email: user.email,
+        username: user.username,
+      },
+    });
   } catch (err) {
     if (err instanceof jwt.TokenExpiredError)
       return errorResponse(res, "token expired", 400);

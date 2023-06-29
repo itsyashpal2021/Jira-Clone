@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { postToNodeServer } from "../../utils";
 import { Backdrop, Box, CircularProgress } from "@mui/material";
-import * as colors from "@mui/material/colors";
+import Navbar from "./Navbar";
 
 export default function Home() {
-  const [sessionActive, setSessionActive] = useState(false);
+  const [userDetails, setUserDetails] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,15 +15,17 @@ export default function Home() {
 
       const res = await postToNodeServer("/user/checkSession", { token });
       if (res.error) navigate("/login");
-      else setSessionActive(true);
+      else setUserDetails({ ...res.userDetails });
     };
 
     checkSession();
   }, [navigate]);
   return (
     <Box>
-      {sessionActive ? (
-        <h2>welcome to Home</h2>
+      {userDetails ? (
+        <Box>
+          <Navbar userDetails={userDetails} />
+        </Box>
       ) : (
         <Backdrop
           sx={{
