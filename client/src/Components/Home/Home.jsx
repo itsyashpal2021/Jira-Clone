@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { postToNodeServer } from "../../utils";
-import { Backdrop, Box, CircularProgress } from "@mui/material";
+import { Backdrop, Box, CircularProgress, Stack } from "@mui/material";
 import Navbar from "./Navbar";
+import Sidebar from "./Sidebar";
 
 export default function Home() {
   const [userDetails, setUserDetails] = useState(false);
@@ -21,22 +22,27 @@ export default function Home() {
     checkSession();
   }, [navigate]);
   return (
-    <Box>
+    <>
       {userDetails ? (
-        <Box>
+        <Box className="d-flex flex-column flex-fill">
           <Navbar userDetails={userDetails} />
+          <Stack direction="row" flexGrow={1}>
+            <Sidebar />
+            <Box className="w-100 d-flex">
+              <Outlet />
+            </Box>
+          </Stack>
         </Box>
       ) : (
         <Backdrop
           sx={{
             bgcolor: "#d2d0d0",
-            zIndex: (theme) => theme.zIndex.drawer + 1,
           }}
           open={true}
         >
           <CircularProgress color="info" />
         </Backdrop>
       )}
-    </Box>
+    </>
   );
 }

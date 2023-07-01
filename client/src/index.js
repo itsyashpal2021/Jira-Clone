@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import {
   createBrowserRouter,
-  Navigate,
   RouterProvider,
   useRouteError,
 } from "react-router-dom";
@@ -11,12 +10,31 @@ import Login from "./Components/Auth/Login";
 import Signup from "./Components/Auth/Signup";
 import ForgotPassword from "./Components/Auth/ForgotPassword";
 import Home from "./Components/Home/Home";
+import CreateProject from "./Components/Home/CreateProject";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
+const clientId =
+  "170407840822-ptrb3fhk38v1h2srijp30a8mga17lku3.apps.googleusercontent.com";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to={"/home"} />,
+    element: <Home />,
     errorElement: <ErrorBoundry />,
+    children: [
+      {
+        path: "/home",
+        element: <h2>welcome to home</h2>,
+      },
+      {
+        path: "/myProjects",
+        element: <h2>welcome to myProjects</h2>,
+      },
+      {
+        path: "/newProject",
+        element: <CreateProject />,
+      },
+    ],
   },
   {
     path: "/login",
@@ -29,10 +47,6 @@ const router = createBrowserRouter([
   {
     path: "/forgotPassword",
     element: <ForgotPassword />,
-  },
-  {
-    path: "/home",
-    element: <Home />,
   },
 ]);
 
@@ -66,7 +80,9 @@ window.onresize = () => {
 };
 
 ReactDOM.createRoot(root).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  <GoogleOAuthProvider clientId={clientId}>
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  </GoogleOAuthProvider>
 );

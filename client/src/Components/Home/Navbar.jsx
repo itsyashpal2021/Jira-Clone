@@ -14,7 +14,7 @@ import * as colors from "@mui/material/colors";
 import { AccountCircle, Notifications, Search } from "@mui/icons-material";
 
 export default function Navbar(props) {
-  const [notifications, setNotifications] = useState(0);
+  const [notifications, setNotifications] = useState(10);
   const userDetails = props.userDetails;
 
   return (
@@ -61,14 +61,14 @@ export default function Navbar(props) {
         />
       </FormControl>
 
-      <Button className="me-2">
+      <IconButton className="me-3">
         <Badge
           badgeContent={notifications === 0 ? undefined : notifications}
-          color="error"
+          color="primary"
         >
-          <Notifications fontSize="large" color="action" />
+          <Notifications fontSize="medium" color="warning" />
         </Badge>
-      </Button>
+      </IconButton>
       <Button variant="contained" color="error">
         Log Out
       </Button>

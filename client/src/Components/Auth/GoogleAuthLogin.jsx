@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+
 import {
   Grid,
   Button,
@@ -9,42 +10,27 @@ import {
   Modal,
 } from "@mui/material";
 import * as colors from "@mui/material/colors";
-import { Google } from "@mui/icons-material";
 
-import { GoogleLogin } from "react-google-login";
-import { gapi } from "gapi-script";
+import { GoogleLogin } from "@react-oauth/google";
 
 import { postToNodeServer } from "../../utils.js";
 import { useNavigate } from "react-router-dom";
 
 export default function GoogleAuthLogin() {
-  const clientId =
-    "170407840822-ptrb3fhk38v1h2srijp30a8mga17lku3.apps.googleusercontent.com";
-
   const [googleAuth, setGoogleAuth] = useState(undefined);
   const [formError, setFormError] = useState("");
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    function start() {
-      gapi.client.init({
-        clientId: clientId,
-        scope: "",
-      });
-    }
-    gapi.load("client:auth2", start);
-  }, []);
-
   const onGoogleLoginSuccess = async (response) => {
     const requestBody = {
-      email: response.profileObj.email,
+      credential: response.credential,
     };
     const res = await postToNodeServer("/user/googleAuth", requestBody);
 
     if (res.error) {
       if (res.error.statusCode !== 500) {
-        setGoogleAuth(requestBody);
+        setGoogleAuth({ ...res.error.moreInfo });
       }
       return;
     }
@@ -76,25 +62,16 @@ export default function GoogleAuthLogin() {
 
   return (
     <>
-      <GoogleLogin
-        cookiePolicy="single_host_origin"
-        clientId={clientId}
-        onSuccess={onGoogleLoginSuccess}
-        onFailure={onGoogleLoginFailure}
-        render={(renderProps) => (
-          <Button
-            variant="contained"
-            onClick={renderProps.onClick}
-            disabled={renderProps.disabled}
-            size="large"
-            className="w-100 mb-3"
-            color="success"
-          >
-            <Google className="me-2" />
-            Sign in with Google
-          </Button>
-        )}
-      />
+      <div className="d-flex justify-content-center">
+        <GoogleLogin
+          onSuccess={onGoogleLoginSuccess}
+          onError={onGoogleLoginFailure}
+          theme="filled_blue"
+          shape="square"
+          size="large"
+          width="700"
+        />
+      </div>
 
       {/* prompt modal for username when signing in using google */}
       {googleAuth ? (

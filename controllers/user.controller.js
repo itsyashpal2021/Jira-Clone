@@ -14,7 +14,7 @@ module.exports.signInWithGoogle = async (req, res) => {
   try {
     // Check Req Body has all the required fields
     const schema = yup.object().shape({
-      email: yup.string().email().required("Email is required"),
+      credential: yup.string().required("Credential is required"),
     });
 
     // validate req body with schema
@@ -23,11 +23,13 @@ module.exports.signInWithGoogle = async (req, res) => {
       return errorResponse(res, validation.error, 400);
     }
 
-    const { email } = req.body;
+    const info = jwt.decode(req.body.credential);
+    const { email } = info;
     const user_doc = await UserSchema.findOne({ email });
 
     // check if it is a new user. if yes prompt for username
-    if (!user_doc) return errorResponse(res, "New User, no username", 400);
+    if (!user_doc)
+      return errorResponse(res, "New User, no username", 400, { email });
 
     // login the user
     const token = jwt.sign(
@@ -49,7 +51,7 @@ module.exports.setUsername = async (req, res) => {
   try {
     // Check Req Body has all the required fields
     const schema = yup.object().shape({
-      email: yup.string().email().required("email is requires"),
+      email: yup.string().email().required("email is required"),
       username: yup.string().required("username is required"),
     });
 
