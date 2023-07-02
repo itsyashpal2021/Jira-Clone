@@ -6,6 +6,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const userRoute = require("./routes/user.route");
+const projectRoute = require("./routes/project.route");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
 app.use("/user/", userRoute);
+app.use("/project/", projectRoute);
 
 app.get("/", (req, res) => {
   res.status(200).send("API is live !");

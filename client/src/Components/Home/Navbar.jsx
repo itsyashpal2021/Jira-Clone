@@ -23,37 +23,42 @@ export default function Navbar(props) {
       alignItems="center"
       px={3}
       py={1}
-      bgcolor={colors.indigo[50]}
+      bgcolor={colors.indigo[900]}
     >
       {/* userdetails */}
-      <AccountCircle fontSize="large" />
+      <AccountCircle fontSize="large" color="warning" />
       <Stack className="ms-1">
-        <Typography variant="h6" className="lh-1" color={colors.blue[900]}>
+        <Typography variant="h6" className="lh-1" color={colors.common.white}>
           {userDetails.username}
         </Typography>
         <Typography
           variant="caption"
-          color={colors.yellow[800]}
+          color={colors.cyan[100]}
           className="fw-medium"
         >
           {userDetails.email}
         </Typography>
       </Stack>
 
-      <FormControl className="mx-auto">
-        <InputLabel htmlFor="homeSearch" className="fs-6 fw-bold">
+      <FormControl className="mx-auto w-25">
+        <InputLabel
+          htmlFor="homeSearch"
+          size="small"
+          className="fs-6 fw-bold text-info"
+        >
           Search
         </InputLabel>
         <OutlinedInput
           id="homeSearch"
           type="text"
           label="Search"
-          size="medium"
-          color="secondary"
+          size="small"
+          color="info"
           className="fs-6 fw-bold"
+          sx={{ color: colors.blueGrey[200] }}
           endAdornment={
             <InputAdornment position="end">
-              <IconButton>
+              <IconButton color="info">
                 <Search />
               </IconButton>
             </InputAdornment>
@@ -66,7 +71,7 @@ export default function Navbar(props) {
           badgeContent={notifications === 0 ? undefined : notifications}
           color="primary"
         >
-          <Notifications fontSize="medium" color="warning" />
+          <Notifications fontSize="medium" className="text-warning" />
         </Badge>
       </IconButton>
       <Button variant="contained" color="error">

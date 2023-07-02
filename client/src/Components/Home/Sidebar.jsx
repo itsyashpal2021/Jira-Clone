@@ -9,6 +9,18 @@ export default function Sidebar() {
   const location = useLocation();
   const activeLink = location.pathname.split("/")[1];
 
+  const sideBarButtonStyle = (id) => {
+    return {
+      whiteSpace: "nowrap",
+      color: "black",
+      mt: 1,
+      bgcolor: activeLink === id ? colors.blue[400] : "transparent",
+      "&:hover": {
+        bgcolor: activeLink === id ? colors.blue[400] : colors.blue[200],
+      },
+    };
+  };
+
   useEffect(() => {
     if (activeLink === "") navigate("/home");
   }, [activeLink, navigate]);
@@ -16,15 +28,7 @@ export default function Sidebar() {
   return (
     <Stack bgcolor={colors.blueGrey[50]} px={1}>
       <Button
-        sx={{
-          whiteSpace: "nowrap",
-          color: "black",
-          bgcolor: activeLink === "home" ? colors.blue[400] : "transparent",
-          "&:hover": {
-            bgcolor:
-              activeLink === "home" ? colors.blue[400] : colors.blue[200],
-          },
-        }}
+        sx={sideBarButtonStyle("home")}
         size="small"
         onClick={() => {
           navigate("/home");
@@ -33,17 +37,7 @@ export default function Sidebar() {
         Home
       </Button>
       <Button
-        sx={{
-          whiteSpace: "nowrap",
-          mt: 1,
-          color: "black",
-          "&:hover": {
-            bgcolor:
-              activeLink === "myProjects" ? colors.blue[400] : colors.blue[200],
-          },
-          bgcolor:
-            activeLink === "myProjects" ? colors.blue[400] : "transparent",
-        }}
+        sx={sideBarButtonStyle("myProjects")}
         size="small"
         onClick={() => {
           navigate("/myProjects");
@@ -54,7 +48,7 @@ export default function Sidebar() {
       <Button
         color="primary"
         variant="contained"
-        sx={{ whiteSpace: "nowrap", mt: 3 }}
+        sx={{ whiteSpace: "nowrap", mt: 5 }}
         size="large"
         onClick={() => {
           navigate("/newProject");

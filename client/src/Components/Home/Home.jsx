@@ -29,7 +29,7 @@ export default function Home() {
           <Stack direction="row" flexGrow={1}>
             <Sidebar />
             <Box className="w-100 d-flex">
-              <Outlet />
+              <Outlet context={{ username: userDetails.username }} />
             </Box>
           </Stack>
         </Box>
